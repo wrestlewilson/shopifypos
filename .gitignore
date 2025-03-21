@@ -31,3 +31,5 @@ yarn-error.log*
 # Shopify
 .shopify/
 .vercel
+
+.firebase/hosting.YnVpbGQ.cache
