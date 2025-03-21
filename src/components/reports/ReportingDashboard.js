@@ -1,5 +1,4 @@
 import React from 'react';
-import { useStore } from '../../contexts/StoreContext';
 import styled from 'styled-components';
 
 const DashboardContainer = styled.div`
@@ -96,7 +95,6 @@ const Button = styled.button`
 `;
 
 const ReportingDashboard = () => {
-  const { settings, userPermissions } = useStore();
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState('');
   const [transactionType, setTransactionType] = React.useState('all');
