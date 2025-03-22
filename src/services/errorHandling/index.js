@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { AuditLoggingService } from '../5_security_audit_logging';
+import { toast } from 'react-toastify';
 
 // Error types
 export const ErrorTypes = {
@@ -519,6 +520,323 @@ export const withErrorHandling = (WrappedComponent, options = {}) => {
         />
       </ErrorBoundary>
     );
+  };
+};
+
+// Custom error types
+export class ValidationError extends Error {
+  constructor(message, field) {
+    super(message);
+    this.name = 'ValidationError';
+    this.field = field;
+  }
+}
+
+export class APIError extends Error {
+  constructor(message, status, endpoint) {
+    super(message);
+    this.name = 'APIError';
+    this.status = status;
+    this.endpoint = endpoint;
+  }
+}
+
+export class NetworkError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+
+export class AuthError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'AuthError';
+  }
+}
+
+export class ShopifyError extends Error {
+  constructor(message, shopifyError) {
+    super(message);
+    this.name = 'ShopifyError';
+    this.shopifyError = shopifyError;
+  }
+}
+
+// Error severity levels
+export const ErrorSeverity = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  CRITICAL: 'critical'
+};
+
+// Error categories
+export const ErrorCategory = {
+  VALIDATION: 'validation',
+  API: 'api',
+  NETWORK: 'network',
+  AUTH: 'auth',
+  SHOPIFY: 'shopify',
+  SYSTEM: 'system'
+};
+
+// Error recovery strategies
+export const RecoveryStrategy = {
+  RETRY: 'retry',
+  FALLBACK: 'fallback',
+  RESET: 'reset',
+  LOGOUT: 'logout'
+};
+
+class ErrorHandlingService {
+  constructor() {
+    this.errorLog = [];
+    this.maxLogSize = 1000;
+    this.retryAttempts = new Map();
+    this.maxRetryAttempts = 3;
+    this.retryDelay = 1000; // 1 second
+  }
+
+  // Log error with proper categorization and severity
+  logError(error, severity = ErrorSeverity.MEDIUM, category = ErrorCategory.SYSTEM) {
+    const errorLog = {
+      timestamp: new Date().toISOString(),
+      error: {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+        ...(error.field && { field: error.field }),
+        ...(error.status && { status: error.status }),
+        ...(error.endpoint && { endpoint: error.endpoint }),
+        ...(error.shopifyError && { shopifyError: error.shopifyError })
+      },
+      severity,
+      category
+    };
+
+    // Add to error log
+    this.errorLog.push(errorLog);
+    if (this.errorLog.length > this.maxLogSize) {
+      this.errorLog.shift();
+    }
+
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error Log:', errorLog);
+    }
+
+    // Send to error tracking service in production
+    if (process.env.NODE_ENV === 'production') {
+      this.sendToErrorTracking(errorLog);
+    }
+
+    return errorLog;
+  }
+
+  // Handle error with appropriate recovery strategy
+  handleError(error, severity = ErrorSeverity.MEDIUM, category = ErrorCategory.SYSTEM) {
+    const errorLog = this.logError(error, severity, category);
+    
+    // Determine recovery strategy based on error type and severity
+    const strategy = this.determineRecoveryStrategy(error, severity);
+    
+    // Execute recovery strategy
+    this.executeRecoveryStrategy(strategy, error);
+
+    // Show user-friendly error message
+    this.showErrorMessage(error, severity);
+
+    return errorLog;
+  }
+
+  // Determine appropriate recovery strategy
+  determineRecoveryStrategy(error, severity) {
+    if (error instanceof NetworkError) {
+      return RecoveryStrategy.RETRY;
+    }
+    
+    if (error instanceof AuthError) {
+      return RecoveryStrategy.LOGOUT;
+    }
+    
+    if (error instanceof ValidationError) {
+      return RecoveryStrategy.RESET;
+    }
+    
+    if (severity === ErrorSeverity.CRITICAL) {
+      return RecoveryStrategy.RESET;
+    }
+    
+    return RecoveryStrategy.FALLBACK;
+  }
+
+  // Execute recovery strategy
+  async executeRecoveryStrategy(strategy, error) {
+    switch (strategy) {
+      case RecoveryStrategy.RETRY:
+        await this.handleRetry(error);
+        break;
+      case RecoveryStrategy.FALLBACK:
+        this.handleFallback(error);
+        break;
+      case RecoveryStrategy.RESET:
+        this.handleReset(error);
+        break;
+      case RecoveryStrategy.LOGOUT:
+        this.handleLogout(error);
+        break;
+    }
+  }
+
+  // Handle retry strategy
+  async handleRetry(error) {
+    const key = `${error.name}-${error.message}`;
+    const attempts = this.retryAttempts.get(key) || 0;
+
+    if (attempts < this.maxRetryAttempts) {
+      this.retryAttempts.set(key, attempts + 1);
+      await new Promise(resolve => setTimeout(resolve, this.retryDelay * (attempts + 1)));
+      return true;
+    }
+
+    this.retryAttempts.delete(key);
+    return false;
+  }
+
+  // Handle fallback strategy
+  handleFallback(error) {
+    // Implement fallback logic based on error type
+    if (error instanceof APIError) {
+      // Use cached data if available
+      return this.getCachedData(error.endpoint);
+    }
+    return null;
+  }
+
+  // Handle reset strategy
+  handleReset(error) {
+    // Reset relevant state based on error type
+    if (error instanceof ValidationError) {
+      // Reset form state
+      return true;
+    }
+    return false;
+  }
+
+  // Handle logout strategy
+  handleLogout(error) {
+    // Clear auth state and redirect to login
+    localStorage.removeItem('authToken');
+    window.location.href = '/login';
+  }
+
+  // Show user-friendly error message
+  showErrorMessage(error, severity) {
+    const message = this.getErrorMessage(error);
+    const options = this.getToastOptions(severity);
+
+    toast.error(message, options);
+  }
+
+  // Get user-friendly error message
+  getErrorMessage(error) {
+    if (error instanceof ValidationError) {
+      return `Please check the ${error.field} field: ${error.message}`;
+    }
+    
+    if (error instanceof NetworkError) {
+      return 'Network connection error. Please check your internet connection.';
+    }
+    
+    if (error instanceof AuthError) {
+      return 'Authentication error. Please log in again.';
+    }
+    
+    if (error instanceof APIError) {
+      return `Server error (${error.status}). Please try again later.`;
+    }
+    
+    return 'An unexpected error occurred. Please try again.';
+  }
+
+  // Get toast notification options
+  getToastOptions(severity) {
+    const baseOptions = {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    };
+
+    switch (severity) {
+      case ErrorSeverity.CRITICAL:
+        return {
+          ...baseOptions,
+          autoClose: false,
+        };
+      case ErrorSeverity.HIGH:
+        return {
+          ...baseOptions,
+          autoClose: 8000,
+        };
+      default:
+        return baseOptions;
+    }
+  }
+
+  // Send error to error tracking service
+  async sendToErrorTracking(errorLog) {
+    try {
+      await fetch('/api/error-tracking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(errorLog),
+      });
+    } catch (error) {
+      console.error('Failed to send error to tracking service:', error);
+    }
+  }
+
+  // Get cached data
+  async getCachedData(key) {
+    try {
+      const cached = localStorage.getItem(key);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+      return null;
+    } catch (error) {
+      console.error('Error retrieving cached data:', error);
+      return null;
+    }
+  }
+
+  // Clear error log
+  clearErrorLog() {
+    this.errorLog = [];
+  }
+
+  // Get error log
+  getErrorLog() {
+    return [...this.errorLog];
+  }
+}
+
+// Create singleton instance
+export const errorHandlingService = new ErrorHandlingService();
+
+// Export error handling hook
+export const useErrorHandling = () => {
+  return {
+    handleError: errorHandlingService.handleError.bind(errorHandlingService),
+    logError: errorHandlingService.logError.bind(errorHandlingService),
+    clearErrorLog: errorHandlingService.clearErrorLog.bind(errorHandlingService),
+    getErrorLog: errorHandlingService.getErrorLog.bind(errorHandlingService)
   };
 };
 

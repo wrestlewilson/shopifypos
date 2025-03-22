@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { validateSettings, validateTransaction, validateStoreCredit } from '../utils/validation';
+import { shopifySyncService } from '../services/shopify/syncService';
+import { ValidationError, ShopifyError } from '../services/errorHandling';
 
 const defaultSettings = {
   taxRate: 0.0,
@@ -24,52 +27,200 @@ export const StoreProvider = ({ children }) => {
   const [currentTransaction, setCurrentTransaction] = useState(null);
   const [settings, setSettings] = useState(defaultSettings);
   const [userPermissions, setUserPermissions] = useState(defaultPermissions);
+  const [loading, setLoading] = useState({
+    settings: false,
+    customer: false,
+    transaction: false,
+    storeCredit: false,
+    sync: false
+  });
+  const [error, setError] = useState(null);
 
   // Load settings from local storage or API on mount
   useEffect(() => {
-    // TODO: Implement loading settings from API or local storage
-    // This would be replaced with actual API calls in the implementation
-    console.log('Loading settings...');
+    const loadSettings = async () => {
+      try {
+        setLoading(prev => ({ ...prev, settings: true }));
+        setError(null);
+        
+        // Try to load from localStorage first
+        const savedSettings = localStorage.getItem('storeSettings');
+        if (savedSettings) {
+          const parsedSettings = JSON.parse(savedSettings);
+          validateSettings(parsedSettings);
+          setSettings(parsedSettings);
+        }
+
+        // Then try to load from API
+        const response = await fetch('/api/settings');
+        if (response.ok) {
+          const apiSettings = await response.json();
+          validateSettings(apiSettings);
+          setSettings(apiSettings);
+          localStorage.setItem('storeSettings', JSON.stringify(apiSettings));
+        }
+      } catch (error) {
+        setError(error instanceof ValidationError ? error : new Error('Failed to load settings'));
+        console.error('Error loading settings:', error);
+      } finally {
+        setLoading(prev => ({ ...prev, settings: false }));
+      }
+    };
+
+    loadSettings();
   }, []);
 
-  const searchCustomers = async (query) => {
-    // TODO: Implement customer search via Shopify API
-    console.log(`Searching for customers with query: ${query}`);
-    return [];
-  };
+  const searchCustomers = useCallback(async (query) => {
+    try {
+      setLoading(prev => ({ ...prev, customer: true }));
+      setError(null);
 
-  const saveTransaction = async (transaction) => {
-    // TODO: Implement transaction saving logic
-    console.log('Saving transaction:', transaction);
-    return true;
-  };
+      const response = await fetch(`/api/customers/search?q=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error('Failed to search customers');
+      }
 
-  const getStoreCredit = async (customerId) => {
-    // TODO: Implement store credit retrieval
-    console.log(`Getting store credit for customer: ${customerId}`);
-    return null;
-  };
+      const customers = await response.json();
+      return customers;
+    } catch (error) {
+      setError(error);
+      console.error('Error searching customers:', error);
+      return [];
+    } finally {
+      setLoading(prev => ({ ...prev, customer: false }));
+    }
+  }, []);
 
-  const updateStoreCredit = async (storeCredit) => {
-    // TODO: Implement store credit update logic
-    console.log('Updating store credit:', storeCredit);
-    return true;
-  };
+  const saveTransaction = useCallback(async (transaction) => {
+    try {
+      setLoading(prev => ({ ...prev, transaction: true }));
+      setError(null);
 
-  const updateSettings = (newSettings) => {
-    // TODO: Save settings to API or local storage
-    setSettings(newSettings);
-  };
+      validateTransaction(transaction);
 
-  const syncWithShopify = async (transactionId) => {
-    // TODO: Implement Shopify synchronization
-    console.log(`Syncing transaction ${transactionId} with Shopify`);
-    return true;
-  };
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transaction),
+      });
 
-  const updateUserPermissions = (newPermissions) => {
-    setUserPermissions(newPermissions);
-  };
+      if (!response.ok) {
+        throw new Error('Failed to save transaction');
+      }
+
+      const savedTransaction = await response.json();
+      setCurrentTransaction(savedTransaction);
+      return savedTransaction;
+    } catch (error) {
+      setError(error instanceof ValidationError ? error : new Error('Failed to save transaction'));
+      console.error('Error saving transaction:', error);
+      throw error;
+    } finally {
+      setLoading(prev => ({ ...prev, transaction: false }));
+    }
+  }, []);
+
+  const getStoreCredit = useCallback(async (customerId) => {
+    try {
+      setLoading(prev => ({ ...prev, storeCredit: true }));
+      setError(null);
+
+      const response = await fetch(`/api/customers/${customerId}/store-credit`);
+      if (!response.ok) {
+        throw new Error('Failed to get store credit');
+      }
+
+      const storeCredit = await response.json();
+      validateStoreCredit(storeCredit);
+      return storeCredit;
+    } catch (error) {
+      setError(error instanceof ValidationError ? error : new Error('Failed to get store credit'));
+      console.error('Error getting store credit:', error);
+      throw error;
+    } finally {
+      setLoading(prev => ({ ...prev, storeCredit: false }));
+    }
+  }, []);
+
+  const updateStoreCredit = useCallback(async (storeCredit) => {
+    try {
+      setLoading(prev => ({ ...prev, storeCredit: true }));
+      setError(null);
+
+      validateStoreCredit(storeCredit);
+
+      const response = await fetch(`/api/customers/${storeCredit.customerId}/store-credit`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(storeCredit),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update store credit');
+      }
+
+      const updatedStoreCredit = await response.json();
+      return updatedStoreCredit;
+    } catch (error) {
+      setError(error instanceof ValidationError ? error : new Error('Failed to update store credit'));
+      console.error('Error updating store credit:', error);
+      throw error;
+    } finally {
+      setLoading(prev => ({ ...prev, storeCredit: false }));
+    }
+  }, []);
+
+  const updateSettings = useCallback(async (newSettings) => {
+    try {
+      setLoading(prev => ({ ...prev, settings: true }));
+      setError(null);
+
+      validateSettings(newSettings);
+
+      const response = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newSettings),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update settings');
+      }
+
+      const updatedSettings = await response.json();
+      setSettings(updatedSettings);
+      localStorage.setItem('storeSettings', JSON.stringify(updatedSettings));
+      return updatedSettings;
+    } catch (error) {
+      setError(error instanceof ValidationError ? error : new Error('Failed to update settings'));
+      console.error('Error updating settings:', error);
+      throw error;
+    } finally {
+      setLoading(prev => ({ ...prev, settings: false }));
+    }
+  }, []);
+
+  const syncWithShopify = useCallback(async (transactionId) => {
+    try {
+      setLoading(prev => ({ ...prev, sync: true }));
+      setError(null);
+
+      const result = await shopifySyncService.syncTransaction(transactionId);
+      return result;
+    } catch (error) {
+      setError(error instanceof ShopifyError ? error : new Error('Failed to sync with Shopify'));
+      console.error('Error syncing with Shopify:', error);
+      throw error;
+    } finally {
+      setLoading(prev => ({ ...prev, sync: false }));
+    }
+  }, []);
 
   const value = {
     currentCustomer,
@@ -83,8 +234,10 @@ export const StoreProvider = ({ children }) => {
     settings,
     updateSettings,
     userPermissions,
-    updateUserPermissions,
-    syncWithShopify
+    updateUserPermissions: setUserPermissions,
+    syncWithShopify,
+    loading,
+    error
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
