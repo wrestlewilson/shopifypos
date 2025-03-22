@@ -1,0 +1,45 @@
+.expiring-credits-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 15px 0;
+  color: #856404;
+}
+
+.expiring-credits-warning h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #856404;
+}
+
+.expiring-credits-warning p {
+  margin: 5px 0;
+  font-size: 0.95em;
+}
+
+.expiring-credits-warning ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.expiring-credits-warning li {
+  margin: 5px 0;
+  font-size: 0.95em;
+}
+
+@media (max-width: 768px) {
+  .expiring-credits-warning {
+    padding: 12px;
+    margin: 10px 0;
+  }
+  
+  .expiring-credits-warning h3 {
+    font-size: 1em;
+  }
+  
+  .expiring-credits-warning p,
+  .expiring-credits-warning li {
+    font-size: 0.9em;
+  }
+} 
