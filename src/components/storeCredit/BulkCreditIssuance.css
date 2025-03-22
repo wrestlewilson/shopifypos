@@ -1,0 +1,250 @@
+.bulk-credit-issuance {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 15px 0;
+}
+
+.bulk-credit-issuance h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.bulk-credit-issuance h3 {
+  color: #495057;
+  margin: 15px 0 10px;
+}
+
+.customer-search {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.search-input button {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-input button:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.search-input button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.search-results {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.search-results h4 {
+  color: #495057;
+  margin-bottom: 10px;
+}
+
+.search-results ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.search-results li:last-child {
+  border-bottom: none;
+}
+
+.search-results button {
+  padding: 4px 8px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-results button:hover {
+  background-color: #218838;
+}
+
+.selected-customers {
+  background-color: #e9ecef;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.selected-customers ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.selected-customers li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.selected-customers li:last-child {
+  border-bottom: none;
+}
+
+.selected-customers button.remove {
+  padding: 4px 8px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.selected-customers button.remove:hover {
+  background-color: #c82333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.amount-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.currency-symbol {
+  color: #6c757d;
+  margin-right: 5px;
+}
+
+.amount-input input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1em;
+}
+
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.credit-summary {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.credit-summary p {
+  margin: 5px 0;
+  color: #495057;
+}
+
+button.primary {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+button.primary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+button.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+.success-message {
+  color: #155724;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .bulk-credit-issuance {
+    padding: 15px;
+  }
+  
+  .search-input {
+    flex-direction: column;
+  }
+  
+  .search-input button {
+    width: 100%;
+  }
+  
+  .form-group select,
+  .form-group textarea {
+    font-size: 16px; /* Prevents zoom on mobile */
+  }
+} 
