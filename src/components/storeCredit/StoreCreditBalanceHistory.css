@@ -1,0 +1,224 @@
+.store-credit-balance-history {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 15px 0;
+}
+
+.store-credit-balance-history h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.balance-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.current-balance {
+  text-align: center;
+}
+
+.current-balance h3 {
+  color: #495057;
+  margin-bottom: 10px;
+}
+
+.balance-amount {
+  font-size: 2em;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.balance-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-weight: bold;
+}
+
+.stat-value.positive {
+  color: #28a745;
+}
+
+.stat-value.negative {
+  color: #dc3545;
+}
+
+.history-filters {
+  margin-bottom: 20px;
+}
+
+.date-range {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.filter-group {
+  flex: 1;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #495057;
+}
+
+.filter-group input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+button.secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button.secondary:hover {
+  background-color: #5a6268;
+}
+
+.balance-history-table {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+tr:hover {
+  background-color: #f8f9fa;
+}
+
+tr.add, tr.issue {
+  background-color: #d4edda;
+}
+
+tr.use, tr.expire {
+  background-color: #f8d7da;
+}
+
+tr.adjust {
+  background-color: #fff3cd;
+}
+
+td.positive {
+  color: #28a745;
+}
+
+td.negative {
+  color: #dc3545;
+}
+
+.balance-history-chart {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.balance-history-chart h3 {
+  color: #495057;
+  margin-bottom: 15px;
+}
+
+.chart-placeholder {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px dashed #dee2e6;
+  border-radius: 4px;
+  color: #6c757d;
+}
+
+.export-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .balance-summary {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .balance-stats {
+    width: 100%;
+    justify-content: space-around;
+  }
+  
+  .date-range {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-group {
+    margin-bottom: 10px;
+  }
+  
+  button.secondary {
+    width: 100%;
+  }
+  
+  .export-options {
+    flex-direction: column;
+  }
+  
+  .export-options button {
+    width: 100%;
+  }
+} 
