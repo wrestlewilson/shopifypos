@@ -1,0 +1,49 @@
+.inventory-changes {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 15px 0;
+}
+
+.inventory-changes-loading {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+}
+
+.reservation-success {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.reservation-success p {
+  margin: 5px 0;
+}
+
+.reservation-success p:last-child {
+  font-size: 0.9em;
+  color: #0b2e13;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .inventory-changes {
+    padding: 15px;
+  }
+  
+  .reservation-success {
+    padding: 12px;
+  }
+} 
