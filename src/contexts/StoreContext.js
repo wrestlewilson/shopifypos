@@ -67,6 +67,10 @@ export const StoreProvider = ({ children }) => {
     return true;
   };
 
+  const updateUserPermissions = (newPermissions) => {
+    setUserPermissions(newPermissions);
+  };
+
   const value = {
     currentCustomer,
     setCurrentCustomer,
@@ -79,6 +83,7 @@ export const StoreProvider = ({ children }) => {
     settings,
     updateSettings,
     userPermissions,
+    updateUserPermissions,
     syncWithShopify
   };
 

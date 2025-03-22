@@ -49,8 +49,16 @@ function App() {
       <div className="App">
         <Header />
         <div className="main-content">
-          <TransactionWidget />
-          <ReportingDashboard />
+          {isAuthenticated ? (
+            <>
+              <TransactionWidget />
+              <ReportingDashboard />
+            </>
+          ) : (
+            <div className="auth-message">
+              <p>Please authenticate to access the application.</p>
+            </div>
+          )}
         </div>
       </div>
     </StoreProvider>
