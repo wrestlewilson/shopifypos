@@ -1,0 +1,281 @@
+.transaction-void-refund {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.transaction-void-refund h2 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.transaction-void-refund h3 {
+  color: #34495e;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.transaction-summary {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.transaction-summary p {
+  margin: 8px 0;
+  color: #495057;
+}
+
+.transaction-summary strong {
+  color: #2c3e50;
+  margin-right: 10px;
+}
+
+.refund-options {
+  margin-bottom: 30px;
+}
+
+.refund-type {
+  margin-bottom: 20px;
+}
+
+.refund-type label {
+  display: block;
+  margin-bottom: 10px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  margin: 0;
+}
+
+.refund-reason {
+  margin-bottom: 20px;
+}
+
+.refund-reason label {
+  display: block;
+  margin-bottom: 8px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.refund-reason textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.refund-items {
+  margin-bottom: 30px;
+}
+
+.item-selection-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.refund-items table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.refund-items th,
+.refund-items td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.refund-items th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-control button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ced4da;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-control button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity-control input {
+  width: 60px;
+  text-align: center;
+  padding: 4px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.total-label {
+  text-align: right;
+  font-weight: 600;
+}
+
+.total-amount {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.manager-approval {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.manager-approval h3 {
+  color: #856404;
+  margin-bottom: 15px;
+}
+
+.manager-approval ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.manager-approval li {
+  color: #856404;
+  margin: 5px 0;
+}
+
+.manager-code {
+  margin-top: 15px;
+}
+
+.manager-code label {
+  display: block;
+  margin-bottom: 8px;
+  color: #856404;
+  font-weight: 500;
+}
+
+.manager-code input {
+  width: 200px;
+  padding: 8px;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+}
+
+.refund-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.refund-actions button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refund-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.refund-actions button.primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.refund-actions button.primary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.refund-actions button.secondary {
+  background-color: white;
+  color: #6c757d;
+  border: 1px solid #ced4da;
+}
+
+.refund-actions button.secondary:hover:not(:disabled) {
+  background-color: #f8f9fa;
+}
+
+.transaction-void-refund-loading,
+.transaction-void-refund-error {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 15px;
+  margin: 15px 0;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .transaction-void-refund {
+    padding: 20px;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .refund-items table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .refund-actions {
+    flex-direction: column;
+  }
+  
+  .refund-actions button {
+    width: 100%;
+  }
+} 
