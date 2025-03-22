@@ -1,0 +1,67 @@
+.redemption-history {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 15px 0;
+}
+
+.redemption-history h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.redemption-history table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.redemption-history th,
+.redemption-history td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.redemption-history th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.redemption-history tr:hover {
+  background-color: #f8f9fa;
+}
+
+.redemption-history td:nth-child(3) {
+  font-weight: 500;
+  color: #28a745;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .redemption-history {
+    padding: 15px;
+  }
+  
+  .redemption-history table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .redemption-history th,
+  .redemption-history td {
+    padding: 8px;
+    font-size: 0.9em;
+  }
+} 
